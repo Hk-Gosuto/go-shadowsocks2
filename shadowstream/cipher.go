@@ -111,3 +111,19 @@ func (k rc4Md5Key) Decrypter(iv []byte) cipher.Stream {
 func RC4MD5(key []byte) (Cipher, error) {
 	return rc4Md5Key(key), nil
 }
+
+type noneKey []byte
+
+type NoneStream struct {
+	cipher.Stream
+}
+
+func (k noneKey) IVSize() int                       { return 16 }
+func (k noneKey) Decrypter(iv []byte) cipher.Stream { return k.Encrypter(iv) }
+func (k noneKey) Encrypter(iv []byte) cipher.Stream {
+	return new(NoneStream)
+}
+
+func NONE(key []byte) (Cipher, error) {
+	return noneKey(key), nil
+}
