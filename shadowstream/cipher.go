@@ -118,7 +118,11 @@ type NoneStream struct {
 	cipher.Stream
 }
 
-func (k noneKey) IVSize() int                       { return 16 }
+func (*NoneStream) XORKeyStream(dst, src []byte) {
+	copy(dst, src)
+}
+
+func (k noneKey) IVSize() int                       { return 0 }
 func (k noneKey) Decrypter(iv []byte) cipher.Stream { return k.Encrypter(iv) }
 func (k noneKey) Encrypter(iv []byte) cipher.Stream {
 	return new(NoneStream)
